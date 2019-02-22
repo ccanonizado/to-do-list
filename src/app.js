@@ -2,6 +2,7 @@ import { LitElement, html } from "lit-element";
 import { styles } from "./styles/styles";
 import "./components/ListTitle";
 import "./components/ListItem";
+import { db } from "./firebase";
 
 export class App extends LitElement {
   static get properties() {
@@ -17,14 +18,15 @@ export class App extends LitElement {
 
   constructor() {
     super();
-    this.list = ["This is task number 1", "This is task number 2"];
+    this.list = [];
     this.input = "";
+    this.getTasks();
   }
 
   handleSubmit(e) {
     if (e.target.value !== "") {
       if (e.key === "Enter") {
-        this.createItem();
+        this.createTask();
       }
     }
   }
@@ -33,15 +35,45 @@ export class App extends LitElement {
     this.input = e.target.value;
   }
 
-  createItem() {
-    if (this.input !== "") {
-      this.list = [...this.list, this.input];
-      this.input = "";
+  async getTasks() {
+    try {
+      const snapshot = await db.collection("tasks").get();
+      snapshot.forEach(doc => {
+        let task = { title: doc.data().title, dateAdded: doc.data().dateAdded };
+        this.list.push(task);
+      });
+      this.requestUpdate();
+    } catch (e) {
+      console.log(e);
     }
   }
 
-  deleteItem(index) {
-    this.list = this.list.filter((item, key) => key !== index);
+  async createTask() {
+    if (this.input !== "") {
+      let title = this.input;
+      this.input = "Loading...";
+      try {
+        let task = { title: title, dateAdded: new Date() };
+        await db.collection("tasks").add(task);
+        this.list.push(task);
+        this.input = "";
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  async deleteTask(index) {
+    try {
+      let task = this.list[index];
+      await db
+        .collection("tasks")
+        .doc(task.title)
+        .delete();
+      this.list = this.list.filter((item, key) => key !== index);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   render() {
@@ -67,19 +99,24 @@ export class App extends LitElement {
       </div>
 
       <div class="center">
-        <button class="btn btn-transition" @click=${this.createItem}>
+        <button class="btn btn-transition" @click=${this.createTask}>
           Add Task
         </button>
       </div>
 
-      ${this.list.map((item, key) => {
-        return html`
-          <list-item
-            item=${item}
-            .deleteItem=${this.deleteItem.bind(this, key)}
-          ></list-item>
-        `;
-      })}
+      ${this.list.length > 0
+        ? html`
+            ${this.list.map((task, key) => {
+              return html`
+                <list-item
+                  title=${task.title}
+                  date=${task.dateAdded}
+                  .deleteTask=${this.deleteTask.bind(this, key)}
+                ></list-item>
+              `;
+            })}
+          `
+        : null};
     `;
   }
 }

@@ -1,11 +1,13 @@
 import { LitElement, html } from "lit-element";
 import { styles } from "../styles/styles";
+import moment from "moment";
 
 export class ListItem extends LitElement {
   static get properties() {
     return {
-      item: { type: String },
-      deleteItem: { type: Function }
+      title: { type: String },
+      date: { type: String },
+      deleteTask: { type: Function }
     };
   }
 
@@ -17,10 +19,13 @@ export class ListItem extends LitElement {
     return html`
       <div class="block-item">
         <div class="item-res">
-          ${this.item}
+          ${this.title}
+          <span class="date"
+            >&nbsp;(Added ${moment(this.date.toDate).fromNow()})</span
+          >
         </div>
 
-        <button class="btn-x btn-x-transition" @click=${this.deleteItem}>
+        <button class="btn-x btn-x-transition" @click=${this.deleteTask}>
           X
         </button>
       </div>

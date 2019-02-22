@@ -19,6 +19,11 @@ export const styles = css`
     margin: 0;
   }
 
+  .date {
+    font-size: 0.8em;
+    font-style: italic;
+  }
+
   .block-input {
     display: flex;
     justify-content: center;
