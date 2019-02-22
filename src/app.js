@@ -49,7 +49,6 @@ export class App extends LitElement {
         this.list.push(task);
       });
       this.requestUpdate();
-      console.log(this.list);
     } catch (e) {
       console.log(e);
     }
