@@ -1,6 +1,6 @@
 # To Do List
 
-A mini-project to be familiarized with lit-html, lit-element, and Firebase
+A mini project to be familiarized with lit-element and Firebase
 
 ## Screenshots
 
