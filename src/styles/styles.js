@@ -1,6 +1,12 @@
 import { css } from "lit-element";
 
 export const styles = css`
+  @import url("https://fonts.googleapis.com/css?family=Barlow:700");
+
+  * {
+    font-family: "Barlow", sans-serif;
+  }
+
   .center {
     display: flex;
     justify-content: center;
