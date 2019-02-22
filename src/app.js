@@ -42,10 +42,14 @@ export class App extends LitElement {
         .orderBy("dateAdded")
         .get();
       snapshot.forEach(doc => {
-        let task = { title: doc.data().title, dateAdded: doc.data().dateAdded };
+        let task = {
+          title: doc.data().title,
+          dateAdded: doc.data().dateAdded.toDate()
+        };
         this.list.push(task);
       });
       this.requestUpdate();
+      console.log(this.list);
     } catch (e) {
       console.log(e);
     }

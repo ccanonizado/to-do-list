@@ -6,7 +6,7 @@ export class ListItem extends LitElement {
   static get properties() {
     return {
       title: { type: String },
-      date: { type: String },
+      date: { type: Date },
       deleteTask: { type: Function }
     };
   }
@@ -20,9 +20,7 @@ export class ListItem extends LitElement {
       <div class="block-item">
         <div class="item-res">
           ${this.title}
-          <span class="date"
-            >&nbsp;(Added ${moment(this.date.toDate).fromNow()})</span
-          >
+          <span class="date">&nbsp;(Added ${moment(this.date).fromNow()})</span>
         </div>
 
         <button class="btn-x btn-x-transition" @click=${this.deleteTask}>
